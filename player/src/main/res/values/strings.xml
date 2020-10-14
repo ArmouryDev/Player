@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="quality_auto">خودکار</string>
+    <string name="message_error_playing_video">خطا در پخش ویدئو</string>
+
+    <!--Video Speed-->
+    <string name="speed_0_25">0.25X</string>
+    <string name="speed_0_5">0.5X</string>
+    <string name="speed_0_75">0.75X</string>
+    <string name="speed_normal">1.0X</string>
+    <string name="speed_1_25">1.25X</string>
+    <string name="speed_1_5">1.5X</string>
+    <string name="speed_1_75">1.75X</string>
+    <string name="speed_2">2X</string>
+
+</resources>

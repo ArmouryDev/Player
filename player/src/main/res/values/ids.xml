@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Player Related Ids-->
+    <item name="exo_toggle_full_screen" type="id" />
+    <item name="exo_settings" type="id" />
+    <item name="exo_time_slash" type="id" />
+
+</resources>
