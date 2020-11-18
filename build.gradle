@@ -13,8 +13,8 @@ buildscript {
         material_version = "1.3.0-alpha03"
 
         //  Armoury
-        armoury_base_ui='0.4.5'
-        armoury_message_view = '0.9.10'
+        armoury_base_ui='0.4.7'
+        armoury_message_view = '0.9.11'
 
         //  Exo Player
         exo_player_version = "2.11.7"

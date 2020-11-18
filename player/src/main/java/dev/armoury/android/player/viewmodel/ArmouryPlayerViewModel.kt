@@ -13,6 +13,7 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.BehindLiveWindowException
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerControlView
+import dev.armoury.android.data.ArmouryUiAction
 import dev.armoury.android.lifecycle.SingleLiveEvent
 import dev.armoury.android.widget.MessageView
 import dev.armoury.android.widget.data.MessageModel
@@ -24,8 +25,8 @@ import dev.armoury.android.viewmodel.ArmouryViewModel
 
 
 //  TODO : We should moved the player out of this library later.
-abstract class ArmouryPlayerViewModel(applicationContext: Application) :
-    ArmouryViewModel(applicationContext) {
+abstract class ArmouryPlayerViewModel<UI: ArmouryUiAction>(applicationContext: Application) :
+    ArmouryViewModel<UI>(applicationContext) {
 
     protected var videoUrl: String? = null
 

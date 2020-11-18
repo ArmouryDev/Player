@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.ViewDataBinding
+import dev.armoury.android.data.ArmouryUiAction
 import dev.armoury.android.ui.ArmouryActivity
 import dev.armoury.android.utils.isPortrait
 import dev.armoury.android.viewmodel.ArmouryViewModel
@@ -13,8 +14,8 @@ import dev.armoury.android.viewmodel.ArmouryViewModel
  * For now we are considering that applications are going to be implemented
  * in the Portrait-Mode only. TODO Later we should make this class more general
  */
-abstract class ArmouryPlayerActivity<T : ViewDataBinding, V : ArmouryViewModel> :
-    ArmouryActivity<T, V>() {
+abstract class ArmouryPlayerActivity<UA: ArmouryUiAction, T : ViewDataBinding, V : ArmouryViewModel<UA>> :
+    ArmouryActivity<UA, T, V>() {
 
     protected abstract fun getToolbar(): Toolbar?
 

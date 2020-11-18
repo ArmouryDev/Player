@@ -9,6 +9,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
+import dev.armoury.android.data.ArmouryUiAction
 import dev.armoury.android.player.R
 import dev.armoury.android.player.data.PlayerState
 import dev.armoury.android.player.data.PlayerUiActions
@@ -21,8 +22,8 @@ import dev.armoury.android.player.widgets.PlayerTimeTextView
 import dev.armoury.android.ui.ArmouryFragment
 import dev.armoury.android.utils.isPortrait
 
-abstract class ArmouryPlayerFragment<T : ViewDataBinding, V : ArmouryPlayerViewModel> :
-    ArmouryFragment<T, V>() {
+abstract class ArmouryPlayerFragment<UA: ArmouryUiAction, T : ViewDataBinding, V : ArmouryPlayerViewModel<UA>> :
+    ArmouryFragment<UA, T, V>() {
 
     private var exoPlayer: SimpleExoPlayer? = null
     private var toggleFullScreenButton: AppCompatImageView? = null
