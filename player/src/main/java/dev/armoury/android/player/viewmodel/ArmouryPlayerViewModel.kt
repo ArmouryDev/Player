@@ -306,7 +306,7 @@ abstract class ArmouryPlayerViewModel<UI: ArmouryUiAction>(applicationContext: A
     fun onFragmentStarted() {
         if (_state.value == PlayerState.Pause) {
             videoUrl?.let {
-                _state.value = PlayerState.Preparing.Video(it)
+                _state.value = PlayerState.Preparing.Video(url = it, requestedPosition = playerLastPosition)
             }
         }
     }
