@@ -33,7 +33,10 @@ abstract class ArmouryPlayerActivity<UA: ArmouryUiAction, T : ViewDataBinding, V
      */
     override fun onBackPressed() {
         if (isPortrait()) super.onBackPressed()
-        else requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        else {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            if (!hasToggleFullScreenButton()) super.onBackPressed()
+        }
     }
 
     /**
@@ -60,6 +63,8 @@ abstract class ArmouryPlayerActivity<UA: ArmouryUiAction, T : ViewDataBinding, V
             getToolbar()?.visibility = View.GONE
         }
     }
+
+    protected open fun hasToggleFullScreenButton() : Boolean = true
 
     private fun toggleNavigationBarVisibility(show: Boolean = true) {
         if (show) {
