@@ -28,7 +28,7 @@ import dev.armoury.android.viewmodel.ArmouryViewModel
 abstract class ArmouryPlayerViewModel<UI: ArmouryUiAction>(applicationContext: Application) :
     ArmouryViewModel<UI>(applicationContext) {
 
-    private var videoUrl: String? = null
+    protected var videoUrl: String? = null
 
     protected val _state = MutableLiveData<PlayerState>(PlayerState.Idle)
     val state: LiveData<PlayerState>
