@@ -46,11 +46,13 @@ abstract class ArmouryPlayerViewModel<UI: ArmouryUiAction>(applicationContext: A
     val playerUiActions: LiveData<PlayerUiActions?>
         get() = _playerUiActions
 
-    protected val selectedSpeed =
-        SingleLiveEvent<VideoSpeedModel>(ArmouryMediaUtils.defaultSpeedModel)
+    protected val selectedSpeed = SingleLiveEvent(ArmouryMediaUtils.defaultSpeedModel)
 
-    protected val selectedQuality =
-        SingleLiveEvent<VideoTrackModel>(ArmouryMediaUtils.autoQualityTrack)
+    protected val selectedQuality = SingleLiveEvent(ArmouryMediaUtils.autoQualityTrack)
+
+    protected val selectedSubtitle = SingleLiveEvent(ArmouryMediaUtils.noSubtitleTrack)
+
+    protected val selectedAudio = SingleLiveEvent<VideoTrackModel.Audio?>(null)
 
     val showComingSoon: LiveData<Boolean> = Transformations.map(_state) {
         _state.value is PlayerState.Error.ComingSoon
@@ -123,19 +125,33 @@ abstract class ArmouryPlayerViewModel<UI: ArmouryUiAction>(applicationContext: A
      * End of the playback report related
      */
 
-
-
-    //  TODO
     val adaptiveTrackSelectionFactory by lazy {
-        DefaultTrackSelector()
+        DefaultTrackSelector(applicationContext)
     }
 
-    //  TODO
-    private val rendererIndex: Int by lazy {
+    private val qualityRendererIndex: Int by lazy {
         adaptiveTrackSelectionFactory.currentMappedTrackInfo?.let {
             ArmouryMediaUtils.getRendererIndex(
                 it,
                 C.TRACK_TYPE_VIDEO
+            )
+        } ?: -1
+    }
+
+    private val subtitleRendererIndex: Int by lazy {
+        adaptiveTrackSelectionFactory.currentMappedTrackInfo?.let {
+            ArmouryMediaUtils.getRendererIndex(
+                    it,
+                    C.TRACK_TYPE_TEXT
+            )
+        } ?: -1
+    }
+
+    private val audioRendererIndex: Int by lazy {
+        adaptiveTrackSelectionFactory.currentMappedTrackInfo?.let {
+            ArmouryMediaUtils.getRendererIndex(
+                    it,
+                    C.TRACK_TYPE_AUDIO
             )
         } ?: -1
     }
@@ -241,30 +257,73 @@ abstract class ArmouryPlayerViewModel<UI: ArmouryUiAction>(applicationContext: A
         )
     }
 
-    //  TODO
-    protected fun onQualitySelected(selectedTrack: VideoTrackModel) {
+    protected fun onQualitySelected(selectedTrack: VideoTrackModel.Quality) {
         if (this.selectedQuality.value == selectedTrack) return
-//        rendererIndex?.let {
             this.selectedQuality.value = selectedTrack
             val parametersBuilder = DefaultTrackSelector.ParametersBuilder()
-            parametersBuilder.setRendererDisabled(rendererIndex, false)
+            parametersBuilder.setRendererDisabled(qualityRendererIndex, false)
             if (selectedTrack.isAutoQuality()) {
-                parametersBuilder.clearSelectionOverrides(rendererIndex)
+                parametersBuilder.clearSelectionOverrides(qualityRendererIndex)
             } else {
                 val override = DefaultTrackSelector.SelectionOverride(
                     selectedTrack.groupIndex,
                     selectedTrack.trackIndex
                 )
-                adaptiveTrackSelectionFactory.currentMappedTrackInfo?.getTrackGroups(rendererIndex)?.let { array ->
+                adaptiveTrackSelectionFactory.currentMappedTrackInfo?.getTrackGroups(qualityRendererIndex)?.let { array ->
                     parametersBuilder.setSelectionOverride(
-                        rendererIndex,
+                        qualityRendererIndex,
                         array,
                         override
                     )
                 }
             }
             adaptiveTrackSelectionFactory.parameters = parametersBuilder.build()
-//        }
+    }
+
+    protected fun onAudioSelected(selectedTrack: VideoTrackModel.Audio) {
+        if (this.selectedAudio.value == selectedTrack) return
+        this.selectedAudio.value = selectedTrack
+        val parametersBuilder = DefaultTrackSelector.ParametersBuilder(applicationContext)
+        parametersBuilder.setRendererDisabled(audioRendererIndex, false)
+
+        val override = DefaultTrackSelector.SelectionOverride(
+                selectedTrack.groupIndex,
+                selectedTrack.trackIndex
+        )
+
+        adaptiveTrackSelectionFactory.currentMappedTrackInfo?.getTrackGroups(audioRendererIndex)?.let { array ->
+            parametersBuilder.setSelectionOverride(
+                    audioRendererIndex,
+                    array,
+                    override
+            )
+        }
+
+        adaptiveTrackSelectionFactory.parameters = parametersBuilder.build()
+    }
+
+    protected fun onSubtitleSelected(selectedTrack: VideoTrackModel.Subtitle) {
+        if (this.selectedSubtitle.value == selectedTrack) return
+        this.selectedSubtitle.value = selectedTrack
+        val parametersBuilder = DefaultTrackSelector.ParametersBuilder(applicationContext)
+        if (selectedTrack.isNoSubTitle()) {
+            parametersBuilder.clearSelectionOverrides(subtitleRendererIndex)
+            parametersBuilder.setRendererDisabled(subtitleRendererIndex, true)
+        } else {
+            parametersBuilder.setRendererDisabled(subtitleRendererIndex, false)
+            val override = DefaultTrackSelector.SelectionOverride(
+                    selectedTrack.groupIndex,
+                    selectedTrack.trackIndex
+            )
+            adaptiveTrackSelectionFactory.currentMappedTrackInfo?.getTrackGroups(subtitleRendererIndex)?.let { array ->
+                parametersBuilder.setSelectionOverride(
+                        subtitleRendererIndex,
+                        array,
+                        override
+                )
+            }
+        }
+        adaptiveTrackSelectionFactory.parameters = parametersBuilder.build()
     }
 
     fun onViewClicked(id: Int) {

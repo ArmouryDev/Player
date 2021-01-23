@@ -2,6 +2,7 @@ package dev.armoury.android.player.utils
 
 import android.net.Uri
 import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.Format
 import com.google.android.exoplayer2.RendererCapabilities
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -15,10 +16,18 @@ import dev.armoury.android.player.data.VideoTrackModel
 
 object ArmouryMediaUtils {
 
-    val autoQualityTrack: VideoTrackModel by lazy {
-        VideoTrackModel(
+    val autoQualityTrack: VideoTrackModel.Quality by lazy {
+        VideoTrackModel.Quality(
             titleRes = R.string.quality_auto,
             width = Int.MAX_VALUE,
+            groupIndex = -1,
+            trackIndex = -1
+        )
+    }
+
+    val noSubtitleTrack: VideoTrackModel.Subtitle by lazy {
+        VideoTrackModel.Subtitle(
+            titleRes = R.string.no_subtitle,
             groupIndex = -1,
             trackIndex = -1
         )
@@ -98,7 +107,7 @@ object ArmouryMediaUtils {
 
     fun getMediaType(url: String) = getMediaType(Uri.parse(url))
 
-    private fun getMediaType(uri: Uri) : Int {
+    private fun getMediaType(uri: Uri): Int {
         val fileName = toLowerInvariant(uri.path ?: "") // TODO
         return when {
             fileName.endsWith(".mpd") or fileName.endsWith("mpd") -> C.TYPE_DASH
@@ -110,11 +119,11 @@ object ArmouryMediaUtils {
 
     fun getVideoTrackList(
         mappedTrackInfo: MappingTrackSelector.MappedTrackInfo?
-    ): List<VideoTrackModel>? {
+    ): List<VideoTrackModel.Quality>? {
         return mappedTrackInfo?.let {
             val rendererIndex = getRendererIndex(mappedTrackInfo, C.TRACK_TYPE_VIDEO)
             return rendererIndex?.let {
-                val videoTracks = ArrayList<VideoTrackModel>()
+                val videoTracks = ArrayList<VideoTrackModel.Quality>()
                 val trackGroups = mappedTrackInfo.getTrackGroups(rendererIndex)
                 val trackGroupCount = trackGroups.length
                 for (i in 0 until trackGroupCount) {
@@ -126,11 +135,10 @@ object ArmouryMediaUtils {
                         ) {
                             val format = currentGroup.getFormat(j)
                             videoTracks.add(
-                                VideoTrackModel(
-                                    title = "${format.height}p",
+                                getVideoQualityTrack(
+                                    format = format,
                                     groupIndex = i,
-                                    trackIndex = j,
-                                    width = format.width
+                                    trackIndex = j
                                 )
                             )
                         }
@@ -142,4 +150,82 @@ object ArmouryMediaUtils {
             }
         }
     }
+
+    fun getVideoLanguagesList(mappedTrackInfo: MappingTrackSelector.MappedTrackInfo?) =
+        mappedTrackInfo?.let {
+            getRendererIndex(mappedTrackInfo, C.TRACK_TYPE_AUDIO)?.let { rendererIndex ->
+                val videoTracks = ArrayList<VideoTrackModel.Audio>()
+                val trackGroups = mappedTrackInfo.getTrackGroups(rendererIndex)
+                val trackGroupCount = trackGroups.length
+                for (i in 0 until trackGroupCount) {
+                    val currentGroup = trackGroups[i]
+                    val itemsCount = currentGroup.length
+                    for (j in 0 until itemsCount) {
+                        if (mappedTrackInfo.getTrackSupport(rendererIndex, i, j) ==
+                            RendererCapabilities.FORMAT_HANDLED
+                        ) {
+                            val format = currentGroup.getFormat(j)
+                            videoTracks.add(
+                                getVideoLanguageTrack(
+                                    format = format,
+                                    groupIndex = i,
+                                    trackIndex = j
+                                )
+                            )
+                        }
+                    }
+                }
+                videoTracks
+            }
+        }
+
+    fun getVideoSubtitleList(mappedTrackInfo: MappingTrackSelector.MappedTrackInfo?) =
+        mappedTrackInfo?.let {
+            getRendererIndex(mappedTrackInfo, C.TRACK_TYPE_TEXT)?.let { rendererIndex ->
+                val videoTracks = ArrayList<VideoTrackModel.Subtitle>()
+                val trackGroups = mappedTrackInfo.getTrackGroups(rendererIndex)
+                val trackGroupCount = trackGroups.length
+                for (i in 0 until trackGroupCount) {
+                    val currentGroup = trackGroups[i]
+                    val itemsCount = currentGroup.length
+                    for (j in 0 until itemsCount) {
+                        if (mappedTrackInfo.getTrackSupport(rendererIndex, i, j) ==
+                            RendererCapabilities.FORMAT_HANDLED
+                        ) {
+                            val format = currentGroup.getFormat(j)
+                            videoTracks.add(
+                                getVideoSubtitleTrack(
+                                    format = format,
+                                    groupIndex = i,
+                                    trackIndex = j
+                                )
+                            )
+                        }
+                    }
+                }
+                videoTracks
+            }
+        }
+
+    private fun getVideoQualityTrack(format: Format, groupIndex: Int, trackIndex: Int) =
+        VideoTrackModel.Quality(
+            title = "${format.height}p",
+            groupIndex = groupIndex,
+            trackIndex = trackIndex,
+            width = format.width
+        )
+
+    private fun getVideoLanguageTrack(format: Format, groupIndex: Int, trackIndex: Int) =
+        VideoTrackModel.Audio(
+            title = format.label ?: "",
+            groupIndex = groupIndex,
+            trackIndex = trackIndex
+        )
+
+    private fun getVideoSubtitleTrack(format: Format, groupIndex: Int, trackIndex: Int) =
+        VideoTrackModel.Subtitle(
+            title = format.label ?: "",
+            groupIndex = groupIndex,
+            trackIndex = trackIndex
+        )
 }

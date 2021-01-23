@@ -2,6 +2,7 @@
 <resources>
 
     <string name="quality_auto">خودکار</string>
+    <string name="no_subtitle">خاموش</string>
     <string name="message_error_playing_video">خطا در پخش ویدئو</string>
 
     <!--Video Speed-->
