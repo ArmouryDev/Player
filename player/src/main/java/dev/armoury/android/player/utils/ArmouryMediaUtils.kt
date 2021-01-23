@@ -21,7 +21,8 @@ object ArmouryMediaUtils {
             titleRes = R.string.quality_auto,
             width = Int.MAX_VALUE,
             groupIndex = -1,
-            trackIndex = -1
+            trackIndex = -1,
+            default = true
         )
     }
 
@@ -219,13 +220,15 @@ object ArmouryMediaUtils {
         VideoTrackModel.Audio(
             title = format.label ?: "",
             groupIndex = groupIndex,
-            trackIndex = trackIndex
+            trackIndex = trackIndex,
+            default = format.selectionFlags == C.SELECTION_FLAG_DEFAULT
         )
 
     private fun getVideoSubtitleTrack(format: Format, groupIndex: Int, trackIndex: Int) =
         VideoTrackModel.Subtitle(
             title = format.label ?: "",
             groupIndex = groupIndex,
-            trackIndex = trackIndex
+            trackIndex = trackIndex,
+            default = format.selectionFlags == C.SELECTION_FLAG_DEFAULT
         )
 }

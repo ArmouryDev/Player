@@ -9,7 +9,8 @@ sealed class VideoTrackModel {
         override val trackIndex: Int,
         override val title: CharSequence? = null,
         override val titleRes: Int? = null,
-        val width: Int
+        val width: Int,
+        override val default: Boolean = false
     ) : VideoTrackModel() {
         override val id: String = "$groupIndex-$trackIndex"
     }
@@ -17,7 +18,8 @@ sealed class VideoTrackModel {
     data class Audio(
         override val title: CharSequence,
         override val groupIndex: Int,
-        override val trackIndex: Int
+        override val trackIndex: Int,
+        override val default: Boolean = false
     ) : VideoTrackModel() {
         override val id: String = "$groupIndex-$trackIndex"
     }
@@ -26,7 +28,8 @@ sealed class VideoTrackModel {
         override val title: CharSequence? = null,
         override val titleRes: Int? = null,
         override val groupIndex: Int,
-        override val trackIndex: Int
+        override val trackIndex: Int,
+        override val default: Boolean = false
     ) : VideoTrackModel() {
         override val id: String = "$groupIndex-$trackIndex"
     }
@@ -36,6 +39,7 @@ sealed class VideoTrackModel {
     abstract val groupIndex: Int
     abstract val trackIndex: Int
     abstract val id: String
+    abstract val default: Boolean
 
 }
 
