@@ -223,7 +223,7 @@ object ArmouryMediaUtils {
             title = format.label ?: "",
             groupIndex = groupIndex,
             trackIndex = trackIndex,
-            default = format.selectionFlags == C.SELECTION_FLAG_DEFAULT
+            default = isDefault(format = format)
         )
 
     private fun getVideoSubtitleTrack(format: Format, groupIndex: Int, trackIndex: Int) =
@@ -231,6 +231,8 @@ object ArmouryMediaUtils {
             title = format.label ?: "",
             groupIndex = groupIndex,
             trackIndex = trackIndex,
-            default = format.selectionFlags == C.SELECTION_FLAG_DEFAULT
+            default = isDefault(format = format)
         )
+
+    private fun isDefault(format: Format) = format.selectionFlags and C.SELECTION_FLAG_DEFAULT != 0
 }

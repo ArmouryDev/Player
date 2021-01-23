@@ -92,6 +92,12 @@ abstract class ArmouryPlayerFragment<UA: ArmouryUiAction, T : ViewDataBinding, V
         }
     }
 
+    private val replayButtonVisibilityObserver: Observer<Int?> by lazy {
+        Observer<Int?> {
+            viewDataBinding.root.findViewById<View>(R.id.exo_replay)?.visibility = it ?: View.GONE
+        }
+    }
+
     private val playerEventListener = object : Player.EventListener {
 
         override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
@@ -116,6 +122,7 @@ abstract class ArmouryPlayerFragment<UA: ArmouryUiAction, T : ViewDataBinding, V
         viewModel.playerUiActions.observe(this, playerUiActionObserver)
         viewModel.state.observe(this, playerStateObserver)
         viewModel.timeRelatedViewsVisibility.observe(this, timeRelatedViewsVisibilityObserver)
+        viewModel.replayButtonVisibility.observe(this, replayButtonVisibilityObserver)
         //  TODO
         viewModel.stopPlayer.observe(this, Observer {
             if (it == true) stopPlayer()
@@ -138,6 +145,11 @@ abstract class ArmouryPlayerFragment<UA: ArmouryUiAction, T : ViewDataBinding, V
             toggleFullScreenButton = this
         }
         viewDataBinding.root.findViewById<View>(R.id.exo_settings)?.apply {
+            setOnClickListener {
+                viewModel.onViewClicked(this.id)
+            }
+        }
+        viewDataBinding.root.findViewById<View>(R.id.exo_replay)?.apply {
             setOnClickListener {
                 viewModel.onViewClicked(this.id)
             }

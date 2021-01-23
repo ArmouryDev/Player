@@ -28,7 +28,7 @@ import dev.armoury.android.viewmodel.ArmouryViewModel
 abstract class ArmouryPlayerViewModel<UI: ArmouryUiAction>(applicationContext: Application) :
     ArmouryViewModel<UI>(applicationContext) {
 
-    protected var videoUrl: String? = null
+    private var videoUrl: String? = null
 
     protected val _state = MutableLiveData<PlayerState>(PlayerState.Idle)
     val state: LiveData<PlayerState>
@@ -160,6 +160,13 @@ abstract class ArmouryPlayerViewModel<UI: ArmouryUiAction>(applicationContext: A
         when (it) {
             false -> View.INVISIBLE
             else -> View.VISIBLE
+        }
+    }
+
+    val replayButtonVisibility: LiveData<Int> = Transformations.map(state) {
+        when (it) {
+            PlayerState.Done -> View.VISIBLE
+            else -> View.GONE
         }
     }
 
@@ -333,6 +340,11 @@ abstract class ArmouryPlayerViewModel<UI: ArmouryUiAction>(applicationContext: A
             }
             R.id.exo_toggle_full_screen -> {
                 _playerUiActions.value = PlayerUiActions.ToggleFullScreen
+            }
+            R.id.exo_replay -> {
+                videoUrl?.let {
+                    _playerUiActions.value = PlayerUiActions.PreparePlayer(videoFileUrl = it)
+                }
             }
         }
     }
