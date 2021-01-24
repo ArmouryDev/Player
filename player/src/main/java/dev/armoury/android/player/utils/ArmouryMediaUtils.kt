@@ -166,13 +166,11 @@ object ArmouryMediaUtils {
                             RendererCapabilities.FORMAT_HANDLED
                         ) {
                             val format = currentGroup.getFormat(j)
-                            videoTracks.add(
-                                getVideoLanguageTrack(
-                                    format = format,
-                                    groupIndex = i,
-                                    trackIndex = j
-                                )
-                            )
+                            getVideoLanguageTrack(
+                                format = format,
+                                groupIndex = i,
+                                trackIndex = j
+                            )?.let { videoTracks.add(it) }
                         }
                     }
                 }
@@ -194,13 +192,11 @@ object ArmouryMediaUtils {
                             RendererCapabilities.FORMAT_HANDLED
                         ) {
                             val format = currentGroup.getFormat(j)
-                            videoTracks.add(
-                                getVideoSubtitleTrack(
-                                    format = format,
-                                    groupIndex = i,
-                                    trackIndex = j
-                                )
-                            )
+                            getVideoSubtitleTrack(
+                                format = format,
+                                groupIndex = i,
+                                trackIndex = j
+                            )?.let { videoTracks.add(it) }
                         }
                     }
                 }
@@ -219,20 +215,24 @@ object ArmouryMediaUtils {
         )
 
     private fun getVideoLanguageTrack(format: Format, groupIndex: Int, trackIndex: Int) =
-        VideoTrackModel.Audio(
-            title = format.label ?: "",
-            groupIndex = groupIndex,
-            trackIndex = trackIndex,
-            default = isDefault(format = format)
-        )
+        format.label?.let { label ->
+            VideoTrackModel.Audio(
+                title = label,
+                groupIndex = groupIndex,
+                trackIndex = trackIndex,
+                default = isDefault(format = format)
+            )
+        }
 
     private fun getVideoSubtitleTrack(format: Format, groupIndex: Int, trackIndex: Int) =
-        VideoTrackModel.Subtitle(
-            title = format.label ?: "",
-            groupIndex = groupIndex,
-            trackIndex = trackIndex,
-            default = isDefault(format = format)
-        )
+        format.label?.let { label ->
+            VideoTrackModel.Subtitle(
+                title = label,
+                groupIndex = groupIndex,
+                trackIndex = trackIndex,
+                default = isDefault(format = format)
+            )
+        }
 
     private fun isDefault(format: Format) = format.selectionFlags and C.SELECTION_FLAG_DEFAULT != 0
 }
