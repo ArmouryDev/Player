@@ -200,8 +200,10 @@ object ArmouryMediaUtils {
                         }
                     }
                 }
-                val booleanDefaultSubtitle = videoTracks.firstOrNull { it.default } != null
-                videoTracks.add(noSubtitleTrack.copy(default = !booleanDefaultSubtitle))
+                if (videoTracks.isNotEmpty()) {
+                    val booleanDefaultSubtitle = videoTracks.firstOrNull { it.default } != null
+                    videoTracks.add(noSubtitleTrack.copy(default = !booleanDefaultSubtitle))
+                }
                 videoTracks
             }
         }
