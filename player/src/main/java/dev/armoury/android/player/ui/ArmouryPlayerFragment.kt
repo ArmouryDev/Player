@@ -210,6 +210,14 @@ abstract class ArmouryPlayerFragment<UA: ArmouryUiAction, T : ViewDataBinding, V
 
     }
 
+    protected fun pausePlayer() {
+        exoPlayer?.playWhenReady = false
+    }
+
+    protected fun resumePlayer() {
+        exoPlayer?.playWhenReady = true
+    }
+
     private fun updateToggleFullScreenButton() {
         toggleFullScreenButton?.setImageResource(
             if (activity.isPortrait()) {
