@@ -17,7 +17,7 @@ buildscript {
         armoury_message_view = '0.9.14'
 
         //  Exo Player
-        exo_player_version = "2.11.7"
+        exo_player_version = "2.13.1"
     }
     repositories {
         google()

@@ -20,6 +20,7 @@ object ArmouryMediaUtils {
         VideoTrackModel.Quality(
             titleRes = R.string.quality_auto,
             width = Int.MAX_VALUE,
+            height = Int.MAX_VALUE,
             groupIndex = -1,
             trackIndex = -1,
             default = true
@@ -213,7 +214,8 @@ object ArmouryMediaUtils {
             title = "${format.height}p",
             groupIndex = groupIndex,
             trackIndex = trackIndex,
-            width = format.width
+            width = format.width,
+            height = format.height
         )
 
     private fun getVideoLanguageTrack(format: Format, groupIndex: Int, trackIndex: Int) =

@@ -10,6 +10,7 @@ sealed class VideoTrackModel {
         override val title: CharSequence? = null,
         override val titleRes: Int? = null,
         val width: Int,
+        val height: Int,
         override val default: Boolean = false
     ) : VideoTrackModel() {
         override val id: String = "$groupIndex-$trackIndex"
