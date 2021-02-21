@@ -11,6 +11,7 @@ import com.google.android.exoplayer2.trackselection.MappingTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util.toLowerInvariant
 import dev.armoury.android.player.R
+import dev.armoury.android.player.data.VideoInfoModel
 import dev.armoury.android.player.data.VideoSpeedModel
 import dev.armoury.android.player.data.VideoTrackModel
 
@@ -119,6 +120,19 @@ object ArmouryMediaUtils {
         }
     }
 
+    fun getVideoInfo(mappedTrackInfo: MappingTrackSelector.MappedTrackInfo?) : VideoInfoModel {
+        val videoQualities = getVideoTrackList(mappedTrackInfo = mappedTrackInfo)
+        val aspectRatio = videoQualities?.firstOrNull { it != autoQualityTrack }?.let { track ->
+            track.width.toFloat() / track.height.toFloat()
+        }
+        return VideoInfoModel(
+            aspectRatio = aspectRatio,
+            qualityTracks = videoQualities,
+            audioTracks = getVideoLanguagesList(mappedTrackInfo = mappedTrackInfo),
+            subtitleTracks = getVideoSubtitleList(mappedTrackInfo = mappedTrackInfo)
+        )
+    }
+
     fun getVideoTrackList(
         mappedTrackInfo: MappingTrackSelector.MappedTrackInfo?
     ): List<VideoTrackModel.Quality>? {
@@ -133,7 +147,7 @@ object ArmouryMediaUtils {
                     val itemsCount = currentGroup.length
                     for (j in 0 until itemsCount) {
                         if (mappedTrackInfo.getTrackSupport(rendererIndex, i, j) ==
-                            RendererCapabilities.FORMAT_HANDLED
+                            C.FORMAT_HANDLED
                         ) {
                             val format = currentGroup.getFormat(j)
                             videoTracks.add(
@@ -164,7 +178,7 @@ object ArmouryMediaUtils {
                     val itemsCount = currentGroup.length
                     for (j in 0 until itemsCount) {
                         if (mappedTrackInfo.getTrackSupport(rendererIndex, i, j) ==
-                            RendererCapabilities.FORMAT_HANDLED
+                            C.FORMAT_HANDLED
                         ) {
                             val format = currentGroup.getFormat(j)
                             getVideoLanguageTrack(
@@ -190,7 +204,7 @@ object ArmouryMediaUtils {
                     val itemsCount = currentGroup.length
                     for (j in 0 until itemsCount) {
                         if (mappedTrackInfo.getTrackSupport(rendererIndex, i, j) ==
-                            RendererCapabilities.FORMAT_HANDLED
+                            C.FORMAT_HANDLED
                         ) {
                             val format = currentGroup.getFormat(j)
                             getVideoSubtitleTrack(
