@@ -122,11 +122,12 @@ object ArmouryMediaUtils {
 
     fun getVideoInfo(mappedTrackInfo: MappingTrackSelector.MappedTrackInfo?) : VideoInfoModel {
         val videoQualities = getVideoTrackList(mappedTrackInfo = mappedTrackInfo)
-        val aspectRatio = videoQualities?.firstOrNull { it != autoQualityTrack }?.let { track ->
-            track.width.toFloat() / track.height.toFloat()
-        }
+        val (width, height) = videoQualities?.firstOrNull { it != autoQualityTrack }?.let { track ->
+            Pair(track.width, track.height)
+        } ?: Pair(null, null)
         return VideoInfoModel(
-            aspectRatio = aspectRatio,
+            width = width,
+            height = height,
             qualityTracks = videoQualities,
             audioTracks = getVideoLanguagesList(mappedTrackInfo = mappedTrackInfo),
             subtitleTracks = getVideoSubtitleList(mappedTrackInfo = mappedTrackInfo)
