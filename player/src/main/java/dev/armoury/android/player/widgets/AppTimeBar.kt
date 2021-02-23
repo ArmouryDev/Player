@@ -6,7 +6,7 @@ import android.view.View
 import androidx.databinding.BindingAdapter
 import com.google.android.exoplayer2.ui.DefaultTimeBar
 
-class AppTimeBar : DefaultTimeBar {
+open class AppTimeBar : DefaultTimeBar {
 
     private var forceVisibility : Int? = null
 

@@ -54,8 +54,6 @@ abstract class ArmouryPlayerViewModel<UI: ArmouryUiAction>(applicationContext: A
 
     protected val selectedAudio = SingleLiveEvent<VideoTrackModel.Audio?>(null)
 
-    protected lateinit var videoInfoModel: VideoInfoModel
-
     val showComingSoon: LiveData<Boolean> = Transformations.map(_state) {
         _state.value is PlayerState.Error.ComingSoon
     }
@@ -213,12 +211,6 @@ abstract class ArmouryPlayerViewModel<UI: ArmouryUiAction>(applicationContext: A
                 stopReporting()
             }
             Player.STATE_READY -> {
-                //  TODO : Performance issue
-                if (!this::videoInfoModel.isInitialized) {
-                    videoInfoModel = ArmouryMediaUtils.getVideoInfo(
-                        mappedTrackInfo = adaptiveTrackSelectionFactory.currentMappedTrackInfo
-                    )
-                }
                 _state.value = if(playWhenReady) PlayerState.Playing.VideoFile else PlayerState.Pause
                 //  TODO Should be checked
                 if (needReportPlayback()) {
