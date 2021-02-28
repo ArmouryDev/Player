@@ -267,7 +267,7 @@ abstract class ArmouryPlayerViewModel<UI: ArmouryUiAction>(applicationContext: A
     protected fun onQualitySelected(selectedTrack: VideoTrackModel.Quality) {
         if (this.selectedQuality.value == selectedTrack) return
             this.selectedQuality.value = selectedTrack
-            val parametersBuilder = DefaultTrackSelector.ParametersBuilder()
+            val parametersBuilder = adaptiveTrackSelectionFactory.parameters.buildUpon()
             parametersBuilder.setRendererDisabled(qualityRendererIndex, false)
             if (selectedTrack.isAutoQuality()) {
                 parametersBuilder.clearSelectionOverrides(qualityRendererIndex)
@@ -290,7 +290,7 @@ abstract class ArmouryPlayerViewModel<UI: ArmouryUiAction>(applicationContext: A
     protected fun onAudioSelected(selectedTrack: VideoTrackModel.Audio) {
         if (this.selectedAudio.value == selectedTrack) return
         this.selectedAudio.value = selectedTrack
-        val parametersBuilder = DefaultTrackSelector.ParametersBuilder(applicationContext)
+        val parametersBuilder = adaptiveTrackSelectionFactory.parameters.buildUpon()
         parametersBuilder.setRendererDisabled(audioRendererIndex, false)
 
         val override = DefaultTrackSelector.SelectionOverride(
@@ -312,7 +312,7 @@ abstract class ArmouryPlayerViewModel<UI: ArmouryUiAction>(applicationContext: A
     protected fun onSubtitleSelected(selectedTrack: VideoTrackModel.Subtitle) {
         if (this.selectedSubtitle.value == selectedTrack) return
         this.selectedSubtitle.value = selectedTrack
-        val parametersBuilder = DefaultTrackSelector.ParametersBuilder(applicationContext)
+        val parametersBuilder = adaptiveTrackSelectionFactory.parameters.buildUpon()
         if (selectedTrack.isNoSubTitle()) {
             parametersBuilder.clearSelectionOverrides(subtitleRendererIndex)
             parametersBuilder.setRendererDisabled(subtitleRendererIndex, true)
