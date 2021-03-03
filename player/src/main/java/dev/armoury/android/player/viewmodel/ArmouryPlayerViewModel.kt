@@ -310,7 +310,8 @@ abstract class ArmouryPlayerViewModel<UI: ArmouryUiAction>(applicationContext: A
     }
 
     protected fun onSubtitleSelected(selectedTrack: VideoTrackModel.Subtitle) {
-        if (this.selectedSubtitle.value == selectedTrack) return
+        //  TODO Should be uncommented.
+//        if (this.selectedSubtitle.value == selectedTrack) return
         this.selectedSubtitle.value = selectedTrack
         val parametersBuilder = adaptiveTrackSelectionFactory.parameters.buildUpon()
         if (selectedTrack.isNoSubTitle()) {
