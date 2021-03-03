@@ -194,7 +194,7 @@ object ArmouryMediaUtils {
             }
         }
 
-    fun getVideoSubtitleList(mappedTrackInfo: MappingTrackSelector.MappedTrackInfo?) =
+    fun getVideoSubtitleList(mappedTrackInfo: MappingTrackSelector.MappedTrackInfo?, selectedIndex: Int? = null) =
         mappedTrackInfo?.let {
             getRendererIndex(mappedTrackInfo, C.TRACK_TYPE_TEXT)?.let { rendererIndex ->
                 val videoTracks = ArrayList<VideoTrackModel.Subtitle>()
@@ -211,7 +211,8 @@ object ArmouryMediaUtils {
                             getVideoSubtitleTrack(
                                 format = format,
                                 groupIndex = i,
-                                trackIndex = j
+                                trackIndex = j,
+                                videoTracks.size == selectedIndex // videoTracks.size is the index of the next item
                             )?.let { videoTracks.add(it) }
                         }
                     }
@@ -243,13 +244,13 @@ object ArmouryMediaUtils {
             )
         }
 
-    private fun getVideoSubtitleTrack(format: Format, groupIndex: Int, trackIndex: Int) =
+    private fun getVideoSubtitleTrack(format: Format, groupIndex: Int, trackIndex: Int, isDefault: Boolean? = null) =
         format.label?.let { label ->
             VideoTrackModel.Subtitle(
                 title = label,
                 groupIndex = groupIndex,
                 trackIndex = trackIndex,
-                default = isDefault(format = format)
+                default = isDefault ?: isDefault(format = format)
             )
         }
 

@@ -10,8 +10,8 @@ android {
     defaultConfig {
         minSdkVersion 17
         targetSdkVersion 30
-        versionCode 77
-        versionName "0.5.27"
+        versionCode 78
+        versionName "0.5.28"
 
         consumerProguardFiles "consumer-rules.pro"
     }
