@@ -14,7 +14,7 @@ buildscript {
 
         //  Armoury
         armoury_base_ui='0.5.0'
-        armoury_message_view = '0.9.14'
+        armoury_message_view = '0.9.18'
 
         //  Exo Player
         exo_player_version = "2.13.1"
