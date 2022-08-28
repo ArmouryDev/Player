@@ -98,7 +98,7 @@ abstract class ArmouryPlayerFragment<UA: ArmouryUiAction, T : ViewDataBinding, V
         }
     }
 
-    private val playerEventListener = object : Player.EventListener {
+    protected open val playerEventListener = object : Player.EventListener {
 
         override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
             viewModel.onPlaybackStateChanged(
