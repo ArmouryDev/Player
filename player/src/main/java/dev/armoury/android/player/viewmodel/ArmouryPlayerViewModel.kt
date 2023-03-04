@@ -113,7 +113,7 @@ abstract class ArmouryPlayerViewModel<UI: ArmouryUiAction>(applicationContext: A
         TODO (reason = "You should override this function if you are going to have the report playback feature")
     }
 
-    private fun startReporting() {
+    fun startReporting() {
         if (isReporting) return
         isReporting = true
         playbackReportHandler.postDelayed(
