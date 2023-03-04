@@ -37,6 +37,7 @@ sealed class PlayerState {
     sealed class Playing : PlayerState() {
 
         object VideoFile : Playing()
+        object Iframe : Playing()
 
         class VAS(var showSkipButton: Boolean = false) : Playing()
 
